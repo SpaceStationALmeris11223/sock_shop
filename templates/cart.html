@@ -1,0 +1,62 @@
+<!--Cart page extends the base page, so that the navbar & the footer are applied-->
+{% extends 'base.html' %}
+
+<!--Block of content that is displayed in between the navbar and the footer-->
+{% block content %}
+<h1>Your Shopping Cart</h1>
+
+<!--If statemnet is testing if cart exist in this session-->
+<!--If there's a cart we'll display a table header with labels and then the products in the cart-->
+{% if cart %}
+<div class="table-responsive">
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Product</th>
+<th>Custom Text</th>
+<th>Price</th>
+<th>Quantity</th>
+<th>Total</th>
+</tr>
+</thead>
+<!-- for loops throgh bthe items in the cart for the current session and displayes each item-->
+<tbody>
+{% for item in cart %}
+<tr>
+<td>{{ item.name }}</td>
+<td>{{ item.custom_text or 'N/A' }}</td>
+<td>${{ item.price }}</td>
+<td>{{ item.quantity }}</td> <!--formatting the ttal cost of the cart as currency-->
+<td>${{ "%.2f"|format(item.total) }}</td>
+</tr>
+{% endfor %}
+</tbody>
+<tfoot>
+<tr>
+<!--Displays the grand total cost for the card-->    
+<td colspan="4" class="text-end fw-bold">Grand Total:</td>
+<td class="fw-bold">${{ "%.2f"|format(total) }}</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<!--Show button to allows the user coninue shoppin on the homepage or go to checkout-->
+<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+<a href="{{ url_for('home') }}" class="btn btn-outline-secondary">
+<i class="bi bi-arrow-left"></i> Continue Shopping
+</a>
+<a href="#" class="btn btn-success">
+<i class="bi bi-credit-card"></i> Proceed to Checkout
+</a>
+<!--Else clasue displays a mesage that the cart is empty if no cart has been created for the sesson-->
+</div>
+{% else %}
+<div class="alert alert-info">
+<i class="bi bi-info-circle"></i> Your cart is empty.
+</div>
+
+<a href="{{ url_for('home') }}" class="btn btn-primary">
+<i class="bi bi-shop"></i> Go Shopping
+</a>
+{% endif %}
+{% endblock %}
